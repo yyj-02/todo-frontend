@@ -2,17 +2,17 @@
   <v-container class="pa-0">
     <v-list>
       <template v-for="todo in todoList">
-        <v-list-item class="pa-0" :key="todo.id">
+        <v-list-item class="pa-0" :key="todo._id">
           <EditTodo
-            v-if="editingId == todo.id"
-            v-on:update-todo="(payload) => updateTodo(todo.id, payload)"
+            v-if="editingId == todo._id"
+            v-on:update-todo="(payload) => updateTodo(todo._id, payload)"
             :todo="todo"
           />
           <TodoItem
             v-else
-            v-on:toggle-status="(payload) => toggleStatus(todo.id)"
-            v-on:edit-todo="(payload) => editTodo(todo.id)"
-            v-on:delete-todo="(payload) => deleteTodo(todo.id)"
+            v-on:toggle-status="(payload) => toggleStatus(todo._id)"
+            v-on:edit-todo="(payload) => editTodo(todo._id)"
+            v-on:delete-todo="(payload) => deleteTodo(todo._id)"
             :todo="todo"
           />
         </v-list-item>
@@ -31,17 +31,17 @@ export default Vue.extend({
     todoList: {
       default: [
         {
-          id: 1,
+          _id: "1",
           title: "test1",
           status: true,
         },
         {
-          id: 2,
+          _id: "2",
           title: "test2",
           status: false,
         },
         {
-          id: 3,
+          _id: "3",
           title: "test3",
           status: false,
         },
@@ -49,7 +49,7 @@ export default Vue.extend({
     },
 
     editingId: {
-      default: 0,
+      default: "",
     },
   },
   components: {
@@ -57,16 +57,16 @@ export default Vue.extend({
     EditTodo,
   },
   methods: {
-    toggleStatus: function (id: number) {
+    toggleStatus: function (id: string) {
       this.$emit("toggle-status", id);
     },
-    updateTodo: function (id: number, title?: Record<string, unknown>) {
+    updateTodo: function (id: string, title?: Record<string, unknown>) {
       this.$emit("update-todo", { id, title });
     },
-    editTodo: function (id: number) {
+    editTodo: function (id: string) {
       this.$emit("edit-todo", id);
     },
-    deleteTodo: function (id: number) {
+    deleteTodo: function (id: string) {
       this.$emit("delete-todo", id);
     },
   },

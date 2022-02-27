@@ -1,11 +1,28 @@
 import axios from "axios";
+import { Todo, TodoDocument } from ".";
 
 const todo = axios.create({
-  baseURL: "http://127.0.0.1:8080/api/todo",
+  baseURL:
+    process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:5000/api/todo"
+      : "http://localhost:5000/api/todo",
   timeout: 4000,
 });
 
 export const listTodo = async () => {
-  const data = await todo.get("/");
+  const { data } = await todo.get<TodoDocument[]>("/");
   return data;
+};
+export const deleteTodo = async (id: string) => {
+  await todo.delete(`/${id}`);
+};
+export const createTodo = async (title: string) => {
+  const { data } = await todo.post<TodoDocument>("/", {
+    title,
+    status: false,
+  });
+  return data;
+};
+export const updateTodo = async (id: string, todoItem: Todo) => {
+  await todo.put(`/${id}`, todoItem);
 };

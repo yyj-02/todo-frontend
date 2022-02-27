@@ -5,6 +5,7 @@
         <v-text-field
           class="ma-3 pa-0"
           v-model="title"
+          @keydown.enter="createTodo()"
           label="New Todo"
           required
         >

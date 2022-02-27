@@ -1,5 +1,8 @@
 export interface Todo {
   title: string;
-  description?: string;
   status: boolean;
+}
+
+export interface TodoDocument extends Todo {
+  _id: string;
 }

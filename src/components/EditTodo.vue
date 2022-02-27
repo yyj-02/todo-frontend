@@ -5,6 +5,7 @@
         <v-text-field
           class="ma-3 pa-0"
           label="Changed Task"
+          @keydown.enter="updateTodo()"
           v-model="newtitle"
           required
         >

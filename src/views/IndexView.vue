@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <v-container class="pa-0">
+    <v-container v-if="loading">
+      <LoadingTodo />
+    </v-container>
+    <v-container v-else class="pa-0">
       <TodoList
         :todoList="todoList"
         :editingId="editingId"
@@ -14,6 +17,14 @@
         v-on:create-todo="(payload) => createTodo(payload)"
       />
     </v-container>
+    <v-snackbar v-model="error">
+      {{ errorMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="error = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -21,71 +32,128 @@
 import Vue from "vue";
 import NewTodo from "../components/NewTodo.vue";
 import TodoList from "../components/TodoList.vue";
+import LoadingTodo from "../components/LoadingTodo.vue";
+import { TodoDocument } from "../common/index";
+
+import { listTodo, createTodo, updateTodo, deleteTodo } from "../common/utils";
+
+interface Data {
+  todoList: TodoDocument[];
+  editingId: string;
+  loading: boolean;
+  error: boolean;
+  errorMessage: string;
+}
 
 export default Vue.extend({
   components: {
     NewTodo,
     TodoList,
+    LoadingTodo,
   },
-  data: () => {
+  data: (): Data => {
     return {
       todoList: [
         {
-          id: 1,
+          _id: "1",
           title: "test1",
           status: true,
         },
         {
-          id: 2,
+          _id: "2",
           title: "test2",
           status: false,
         },
         {
-          id: 3,
+          _id: "3",
           title: "test3",
           status: false,
         },
       ],
-      editingId: 0,
+      editingId: "",
+      loading: false,
+      error: false,
+      errorMessage: "",
     };
   },
+  async created() {
+    try {
+      this.error = false;
+      this.loading = true;
+      this.todoList = await listTodo();
+    } catch (error) {
+      this.error = true;
+    } finally {
+      this.loading = false;
+    }
+  },
   methods: {
-    createTodo: function (payload: string) {
+    createTodo: async function (payload: string) {
       let temp = {
-        id: this.todoList.length + 1,
+        _id: "",
         title: payload,
         status: false,
       };
       this.todoList.push(temp);
+      try {
+        await createTodo(temp.title);
+      } catch (error) {
+        this.errorMessage = "Failed to create todo";
+        this.error = true;
+      } finally {
+        this.todoList = await listTodo();
+      }
     },
-    toggleStatus: function (payload: number) {
+    toggleStatus: async function (payload: string) {
       for (let i = 0; i < this.todoList.length; i++) {
-        if (this.todoList[i].id == payload) {
+        if (this.todoList[i]._id == payload) {
           const temp = this.todoList[i];
           temp.status = !temp.status;
           this.todoList[i] = temp;
+          await updateTodo(payload, {
+            title: temp.title,
+            status: temp.status,
+          });
+          this.todoList = await listTodo();
         }
       }
     },
-    updateTodo: function (payload: { id: number; title: string }) {
-      this.editingId = 0;
+    updateTodo: async function (payload: { id: string; title: string }) {
+      this.editingId = "";
       for (let i = 0; i < this.todoList.length; i++) {
-        if (this.todoList[i].id == payload.id) {
+        if (this.todoList[i]._id == payload.id) {
           const temp = this.todoList[i];
           temp.title = payload.title;
           this.todoList[i] = temp;
+          try {
+            await updateTodo(payload.id, {
+              title: temp.title,
+              status: temp.status,
+            });
+          } catch (error) {
+            this.errorMessage = "Failed to update todo";
+            this.error = true;
+          } finally {
+            this.todoList = await listTodo();
+          }
         }
       }
-      //update todo
     },
-    editTodo: function (payload: number) {
+    editTodo: function (payload: string) {
       this.editingId = payload;
     },
-    deleteTodo: function (payload: number) {
-      console.log("fuck");
+    deleteTodo: async function (payload: string) {
       for (let i = 0; i < this.todoList.length; i++) {
-        if (this.todoList[i].id == payload) {
+        if (this.todoList[i]._id == payload) {
           this.todoList.splice(i, 1);
+          try {
+            await deleteTodo(payload);
+          } catch (error) {
+            this.errorMessage = "Failed to delete todo";
+            this.error = true;
+          } finally {
+            this.todoList = await listTodo();
+          }
         }
       }
     },
