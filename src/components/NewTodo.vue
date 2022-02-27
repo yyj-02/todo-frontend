@@ -33,8 +33,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    createTodo: function (e: Event) {
-      e.preventDefault();
+    createTodo: function () {
       this.$emit("create-todo", this.title);
       this.title = "";
     },
