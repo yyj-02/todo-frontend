@@ -4,7 +4,7 @@ import { Todo, TodoDocument } from ".";
 const todo = axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
-      ? "http://127.0.0.1:5000/api/todo"
+      ? "https://todo-friz-backend.herokuapp.com/api/todo/"
       : process.env.VUE_APP_BACKEND,
   timeout: 4000,
 });
