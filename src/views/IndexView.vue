@@ -82,6 +82,7 @@ export default Vue.extend({
       this.loading = true;
       this.todoList = await listTodo();
     } catch (error) {
+      this.errorMessage = "Failed to fetch todo";
       this.error = true;
     } finally {
       this.loading = false;
