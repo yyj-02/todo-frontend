@@ -2,10 +2,7 @@ import axios from "axios";
 import { Todo, TodoDocument } from ".";
 
 const todo = axios.create({
-  baseURL:
-    process.env.NODE_ENV === "development"
-      ? "https://todo-friz-backend.herokuapp.com/api/todo/"
-      : process.env.VUE_APP_BACKEND,
+  baseURL: process.env.VUE_APP_BACKEND,
   timeout: 4000,
 });
 
