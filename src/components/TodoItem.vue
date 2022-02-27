@@ -15,10 +15,10 @@
       <v-container class="ma-3 pa-0 body-1" v-else @click="toggleStatus()">
         {{ todo.title }}
       </v-container>
-      <v-btn icon class="ma-3" small color="grey">
+      <v-btn v-on:click="editTodo()" icon class="ma-3" small color="grey">
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
-      <v-btn icon class="ma-3" small color="red">
+      <v-btn v-on:click="deleteTodo()" icon class="ma-3" small color="red">
         <v-icon>mdi-delete-outline</v-icon>
       </v-btn>
     </v-container>
@@ -41,6 +41,12 @@ export default Vue.extend({
   methods: {
     toggleStatus: function () {
       this.$emit("toggle-status");
+    },
+    editTodo: function () {
+      this.$emit("edit-todo");
+    },
+    deleteTodo: function () {
+      this.$emit("delete-todo");
     },
   },
 });
