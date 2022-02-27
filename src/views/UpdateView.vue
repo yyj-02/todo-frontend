@@ -1,21 +1,20 @@
 <template>
   <v-app>
-    <v-container class="pt-10 pb-5 d-flex justify-center">
-      <h1>Todo 📒</h1>
+    <v-container class="pa-0 d-none d-lg-block">
+      <h1>Update</h1>
     </v-container>
-    <v-main>
-      <router-view />
-    </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+
 export default Vue.extend({
+  components: {
+    //
+  },
   data: () => {
-    return {
-      //
-    };
+    //
   },
   methods: {
     //
