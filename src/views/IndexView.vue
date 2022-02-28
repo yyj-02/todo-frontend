@@ -91,7 +91,7 @@ export default Vue.extend({
   methods: {
     createTodo: async function (payload: string) {
       let temp = {
-        _id: "",
+        _id: "loading",
         title: payload,
         status: false,
       };
@@ -115,7 +115,6 @@ export default Vue.extend({
             title: temp.title,
             status: temp.status,
           });
-          this.todoList = await listTodo();
         }
       }
     },
@@ -134,7 +133,6 @@ export default Vue.extend({
           } catch (error) {
             this.errorMessage = "Failed to update todo";
             this.error = true;
-          } finally {
             this.todoList = await listTodo();
           }
         }
@@ -152,7 +150,6 @@ export default Vue.extend({
           } catch (error) {
             this.errorMessage = "Failed to delete todo";
             this.error = true;
-          } finally {
             this.todoList = await listTodo();
           }
         }

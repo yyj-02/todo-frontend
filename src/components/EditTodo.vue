@@ -8,6 +8,7 @@
           @keydown.enter="updateTodo()"
           v-model="newtitle"
           required
+          autofocus
         >
         </v-text-field>
         <v-btn v-on:click="updateTodo()" icon class="ma-3" small color="teal">
@@ -15,6 +16,14 @@
         </v-btn>
       </v-container>
     </v-form>
+    <v-snackbar v-model="error">
+      {{ errorMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="error = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 <script lang="ts">
@@ -33,11 +42,18 @@ export default Vue.extend({
   data: () => {
     return {
       newtitle: "",
+      error: false,
+      errorMessage: "",
     };
   },
   methods: {
     updateTodo: function () {
-      this.$emit("update-todo", this.newtitle);
+      if (this.newtitle.length == 0) {
+        this.errorMessage = "Input cannot be empty";
+        this.error = true;
+      } else {
+        this.$emit("update-todo", this.newtitle);
+      }
     },
   },
 });

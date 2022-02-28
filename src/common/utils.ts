@@ -2,7 +2,10 @@ import axios from "axios";
 import { Todo, TodoDocument } from ".";
 
 const todo = axios.create({
-  baseURL: process.env.VUE_APP_BACKEND,
+  baseURL:
+    process.env.NODE_ENV == "development"
+      ? "http://127.0.0.1:5000/api/todo"
+      : process.env.VUE_APP_BACKEND,
   timeout: 4000,
 });
 
