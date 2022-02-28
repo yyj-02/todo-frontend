@@ -2,7 +2,7 @@
   <v-hover v-slot="{ hover }">
     <v-container
       :class="{ grey: hover }"
-      class="pa-0 d-flex lighten-3 align-center"
+      class="pa-0 d-flex align-center"
       style="max-width: 400px"
     >
       <v-container
@@ -15,7 +15,7 @@
       <v-container class="ma-3 pa-0 body-1" v-else @click="toggleStatus()">
         {{ todo.title }}
       </v-container>
-      <v-btn v-on:click="editTodo()" icon class="ma-3" small color="grey">
+      <v-btn v-on:click="editTodo()" icon class="ma-3" small color="orange">
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
       <v-btn v-on:click="deleteTodo()" icon class="ma-3" small color="red">
